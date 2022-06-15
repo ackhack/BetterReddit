@@ -1,4 +1,4 @@
-This is a Chrome Extension that serves a website using the reddit api.
+This is a Chrome Extension that serves a website using the reddit api. To open the Website, click on the icon in the top right. The page can be bookmarked.
 
 # Start
 
