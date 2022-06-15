@@ -33,12 +33,18 @@ function getVotingDiv(object, sideways, prefix) {
 function upvote(object, target) {
     if (voteList[object.name] == 1) {
         object.unvote();
+        target.children[0].style.border = "solid white";
+        target.children[0].style["border-width"] = "0 5 5 0";
         target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) - 1;
         voteList[object.name] = 0;
         target.parentElement.children[1].style.color = "white";
         return;
     };
     object.upvote();
+    target.children[0].style.border = "solid orange";
+    target.children[0].style["border-width"] = "0 5 5 0";
+    target.parentElement.children[2].children[0].style.border = "solid white";
+    target.parentElement.children[2].children[0].style["border-width"] = "0 5 5 0";
     target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) + 1 - voteList[object.name];
     voteList[object.name] = 1;
     target.parentElement.children[1].style.color = "orange";
@@ -48,12 +54,18 @@ function downvote(object, target) {
     if (target.tagName !== "P") return;
     if (voteList[object.name] == -1) {
         object.unvote();
+        target.children[0].style.border = "solid white";
+        target.children[0].style["border-width"] = "0 5 5 0";
         target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) + 1;
         voteList[object.name] = 0;
         target.parentElement.children[1].style.color = "white";
         return;
     };
     object.downvote();
+    target.children[0].style.border = "solid lightblue";
+    target.children[0].style["border-width"] = "0 5 5 0";
+    target.parentElement.children[0].children[0].style.border = "solid white";
+    target.parentElement.children[0].children[0].style["border-width"] = "0 5 5 0";
     target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) - 1 - voteList[object.name];
     voteList[object.name] = -1;
     target.parentElement.children[1].style.color = "lightblue";
