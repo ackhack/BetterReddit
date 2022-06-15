@@ -5,9 +5,7 @@ document.onkeydown = function (evt) {
             closeMain();
             break;
         case "Enter":
-            if (activePost.divIndex !== undefined) {
-                postToMain(document.getElementById("mainList").children[activePost.divIndex]);
-            }
+            enter(evt);
             break;
         case "ArrowUp":
             arrowUp(evt);
@@ -101,4 +99,13 @@ function m(evt) {
 
     document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.toggleMute();
 
+}
+
+function enter(evt) {
+    if (document.getElementById("mainPage").style.display == "none") return;
+    evt.preventDefault();
+
+    if (activePost.divIndex !== undefined) {
+        postToMain(document.getElementById("mainList").children[activePost.divIndex]);
+    }
 }
