@@ -1,0 +1,19 @@
+{
+    "name": "Better Reddit",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "serviceWorker.js"
+    },
+    "icons": {
+        "64": "icon.png"
+    },
+    "action": {
+        "default_title": "Better Reddit",
+        "default_popup": "popup.html"
+    }
+}
