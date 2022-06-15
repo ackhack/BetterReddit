@@ -17,6 +17,11 @@ async function getCommentsDiv(post) {
     log('Get Comments', true);
     if (post.comments.list == undefined) {
         let comments = await post.comments.fetch_all();
+        if (comments == undefined) {
+            log('Error: Api not responding', true);
+            sendNotification("Error: Api not responding");
+            return;
+        }
         post.comments.list = comments;
     }
 

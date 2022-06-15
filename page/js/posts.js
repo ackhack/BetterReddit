@@ -4,6 +4,9 @@ let postsBlocked = false;
 function loadPostByName(name) {
     api.getSubmission(name.split("_")[1]).fetch().then(post => {
         postsToList([post]);
+    }).catch(e => {
+        log(e);
+        sendNotification(e);
     });
 }
 
@@ -12,6 +15,9 @@ function loadFirstPosts() {
     api.getBest({ limit: 10 }).then(posts => {
         postsToList(posts);
         setActivePostByIndex(0);
+    }).catch(e => {
+        log(e);
+        sendNotification(e);
     });
 }
 
@@ -21,6 +27,9 @@ function loadMorePosts() {
     postsBlocked = true;
     api.getBest({ limit: 50, after: newest_fullname }).then(posts => {
         postsToList(posts);
+    }).catch(e => {
+        log(e);
+        sendNotification(e);
     });
 }
 
