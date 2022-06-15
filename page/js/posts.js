@@ -191,6 +191,12 @@ function setActivePostByIndex(divIndex, scroll = true) {
 
     if (divIndex < 0 || divIndex >= document.getElementById("mainList").children.length) return;
 
+    if (divIndex == activePostIndex.divIndex) {
+        if (scroll)
+            scrollIntoView(newDiv);
+        return;
+    };
+
     let oldDiv = document.getElementById("mainList").children[activePost.divIndex];
     if (oldDiv) {
         oldDiv.style.border = "1px solid white";
