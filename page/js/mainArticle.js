@@ -23,13 +23,11 @@ async function getCommentsDiv(post) {
     let mainDiv = document.createElement("div");
     mainDiv.className = "main_comments";
 
-    let markdownConverter = new showdown.Converter();
-
     for (let comment of post.comments.list) {
         try {
-            let div = getCommentDiv(comment, markdownConverter);
+            let div = getCommentDiv(comment);
             mainDiv.appendChild(div);
-            getCommentTreesDivs(comment, markdownConverter).forEach(d => div.append(d))
+            getCommentTreesDivs(comment).forEach(d => div.append(d))
             log('Comment: ' + comment.body, true);
         } catch (ex) {
             log(ex);
@@ -40,10 +38,10 @@ async function getCommentsDiv(post) {
     return mainDiv;
 }
 
-function getCommentTreesDivs(comment, markdownConverter) {
+function getCommentTreesDivs(comment) {
 
     function getTree(comment) {
-        let tree = getCommentDiv(comment, markdownConverter);
+        let tree = getCommentDiv(comment);
         tree.className = "main_comment_tree";
         for (let rep of comment.replies) {
             tree.appendChild(getTree(rep));
@@ -60,7 +58,7 @@ function getCommentTreesDivs(comment, markdownConverter) {
     return array;
 }
 
-function getCommentDiv(comment, markdownConverter) {
+function getCommentDiv(comment) {
     let div = document.createElement("div");
     div.className = "main_comment";
     div.title = comment.name;
@@ -79,7 +77,7 @@ function getCommentDiv(comment, markdownConverter) {
 
     let span = document.createElement("span");
     span.className = "main_comment_text";
-    span.innerHTML = markdownConverter.makeHtml(comment.body);
+    span.innerHTML = comment.body_html;
 
     div.appendChild(span);
     return div;
