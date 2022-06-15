@@ -17,7 +17,6 @@ body {
 #mainList {
     width: min-content;
     min-width: 40%;
-    max-width: 100vh;
     position: relative;
     left: 50%;
     transform: translate(-50%);
@@ -96,9 +95,10 @@ body {
 }
 
 .post_content {
-    max-height: inherit;
-    max-width: inherit;
+    max-height: 60vh;
+    max-width: 37vw;
     flex: 2;
+    margin-left: 10px;
 }
 
 .post_upvotes {
@@ -348,4 +348,9 @@ body {
 .player_controls {
     display:flex;
     flex-direction: row;
+}
+
+.post_iframe {
+    height: 100vh;
+    width: 100vw;
 }
