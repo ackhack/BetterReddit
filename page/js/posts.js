@@ -12,7 +12,7 @@ function loadPostByName(name) {
 
 function loadFirstPosts() {
     log('Load First Posts', true);
-    api.getBest({ limit: 10 }).then(posts => {
+    api.getBest({ limit: 10, after: newest_fullname  }).then(posts => {
         postsToList(posts);
         setActivePostByIndex(0);
     }).catch(e => {
@@ -200,7 +200,7 @@ function setActivePostByIndex(divIndex, scroll = true) {
 
     if (divIndex < 0 || divIndex >= document.getElementById("mainList").children.length) return;
 
-    if (divIndex == activePostIndex.divIndex) {
+    if (divIndex == activePost.divIndex) {
         if (scroll)
             scrollIntoView(newDiv);
         return;
