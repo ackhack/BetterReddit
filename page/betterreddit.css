@@ -95,8 +95,8 @@ body {
 }
 
 .post_content {
-    max-height: 60vh;
-    max-width: 37vw;
+    max-height: inherit;
+    max-width: inherit;
     flex: 2;
     margin-left: 10px;
 }
@@ -119,6 +119,15 @@ body {
     left: 50%;
     position: relative;
     transform: translate(-50%);
+}
+
+.post_player {
+    height: calc(100% - 30px);
+}
+
+.player_video {
+    height: 100%;
+    width: 100%;
 }
 
 .post_text {
