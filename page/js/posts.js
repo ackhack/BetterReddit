@@ -134,7 +134,7 @@ function getContentDiv(post, forMain = false) {
         ContentUrl.startsWith("https://twitter.com/") ||
         ContentUrl.startsWith("https://gfycat.com/")) {
         content.innerHTML += post.secure_media_embed.content;
-        Array.from(content.getElementsByTagName("iframe")).forEach(iframe => { iframe.className += " post_element post_iframe"; });
+        Array.from(content.getElementsByTagName("iframe")).forEach(iframe => { iframe.className += " post_element post_iframe"; if (iframe.style.position == "absolute") {iframe.style.position = "relative"} });
         return content;
     }
 
