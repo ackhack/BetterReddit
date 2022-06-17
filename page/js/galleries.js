@@ -42,7 +42,7 @@ function getGalleryDiv(post) {
     imageDiv.className = "post_gallery_images slideshow_container post_element";
     imageDiv.id = post.name;
 
-    let images = Object.keys(post.media_metadata).map(key => post.media_metadata[key].s.u);
+    let images = post.gallery_data.items.map(item => post.media_metadata[item.media_id].p[post.media_metadata[item.media_id].p.length - 1].u)
     for (image of images) {
         let div = document.createElement("div");
         div.className = "slideshow_slide post_element";
