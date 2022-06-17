@@ -40,13 +40,13 @@ function postsToList(posts) {
         try {
             list.appendChild(getPostDiv(post));
             postArray.push(post);
+            newest_fullname = post.name;
             log('Added ' + post.title, true);
         } catch (ex) {
             log(ex);
             sendNotification(ex);
         }
     }
-    newest_fullname = posts[posts.length - 1].name;
     startGalleries();
     postsBlocked = false;
 }
