@@ -12,7 +12,7 @@ function loadPostByName(name) {
 
 function loadFirstPosts() {
     log('Load First Posts', true);
-    api.getBest({ limit: 10, after: newest_fullname  }).then(posts => {
+    api.getBest({ limit: 10, after: newest_fullname }).then(posts => {
         postsToList(posts);
         setActivePostByIndex(0);
     }).catch(e => {
@@ -52,6 +52,9 @@ function postsToList(posts) {
 }
 
 function getPostDiv(post) {
+
+    if (postArray.filter(x => x.name == post.name).length > 0) throw new Error("Post already exists: " + post.name);
+
     let div = document.createElement("div");
     div.className = "post post_element";
     div.title = post.name;
@@ -142,7 +145,7 @@ function getContentDiv(post, forMain = false) {
         ContentUrl.startsWith("https://twitter.com/") ||
         ContentUrl.startsWith("https://gfycat.com/")) {
         content.innerHTML += post.secure_media_embed.content;
-        Array.from(content.getElementsByTagName("iframe")).forEach(iframe => { iframe.className += " post_element post_iframe"; if (iframe.style.position == "absolute") {iframe.style.position = "relative"} });
+        Array.from(content.getElementsByTagName("iframe")).forEach(iframe => { iframe.className += " post_element post_iframe"; if (iframe.style.position == "absolute") { iframe.style.position = "relative" } });
         return content;
     }
 
