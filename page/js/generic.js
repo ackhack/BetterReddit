@@ -3,6 +3,7 @@ let postArray = [];
 let api = {};
 let username = "";
 let newest_fullname = "";
+let currDisplay = "mainPage";
 
 function log(content, devLevel = false) {
     if (!verbose && devLevel) return;

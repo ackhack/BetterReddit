@@ -9,6 +9,7 @@ function closeMain() {
     mainArticle.children[2].innerHTML = "";
     mainArticle.children[3].innerHTML = "";
     mainPage.style.display = "block";
+    currDisplay = "mainPage";
     scrollIntoView(document.getElementById("mainList").children[activePost.divIndex]);
     comments = [];
 }
@@ -103,7 +104,6 @@ function postToMain(div) {
     let mainPage = document.getElementById("mainPage");
 
     mainContent.innerHTML = "";
-    mainArticle.style.display = "block";
 
     let title = document.createElement("span");
     title.className = "main_title hoverable";
@@ -125,6 +125,8 @@ function postToMain(div) {
     mainArticle.children[0].children[1].appendChild(subreddit);
     mainArticle.children[0].children[2].appendChild(author);
     mainPage.style.display = "none";
+    mainArticle.style.display = "block";
+    currDisplay = "mainArticle";
 
     mainContent.appendChild(getContentDiv(post, true));
 
