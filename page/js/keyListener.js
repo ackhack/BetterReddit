@@ -1,7 +1,7 @@
 const keys = {
     "Escape": {
         "last": 0,
-        "func": closeMain
+        "func": escape
     },
     "Enter": {
         "last": 0,
@@ -44,6 +44,16 @@ document.onkeydown = function (evt) {
         }
     }
 };
+
+function escape(evt) {
+    switch (currDisplay) {
+        case "mainArticle":
+            evt.preventDefault();
+
+            closeMain();
+            break;
+    }
+}
 
 function arrowUp(evt) {
     switch (currDisplay) {
