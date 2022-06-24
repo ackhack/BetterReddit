@@ -6,11 +6,19 @@ function closeMain() {
     mainArticle.children[1].innerHTML = "";
     mainArticle.children[0].children[1].innerHTML = "";
     mainArticle.children[0].children[2].innerHTML = "";
-    mainArticle.children[2].innerHTML = "";
     mainArticle.children[3].innerHTML = "";
     mainPage.style.display = "block";
     currDisplay = "mainPage";
-    scrollIntoView(document.getElementById("mainList").children[activePost.divIndex]);
+
+    let listDiv = document.getElementById("mainList").children[activePost.divIndex];
+
+    if (listDiv != undefined) {
+        let mainContent = document.getElementById("mainContent");
+        listDiv.getElementsByClassName("post_body")[0].appendChild(mainContent.children[0]);
+        mainContent.innerHTML = "";
+    }
+
+    scrollIntoView(listDiv);
     comments = [];
 }
 
@@ -96,6 +104,14 @@ function postToMain(div) {
         return;
     }
 
+    let content = div.getElementsByClassName("post_content")[0];
+
+    if (content == undefined || content == null) {
+        log('Error: Post not found', true);
+        sendNotification("Error: Post not found");
+        return;
+    }
+
     let post = postArray[activePost.postIndex];
 
     let mainArticle = document.getElementById("mainArticle");
@@ -128,9 +144,9 @@ function postToMain(div) {
     mainArticle.style.display = "block";
     currDisplay = "mainArticle";
 
-    mainContent.appendChild(getContentDiv(post, true));
+    mainContent.appendChild(content);
 
     updateThisInstance = false;
-    window.scroll(0,0);
+    window.scroll(0, 0);
     getCommentsDiv(post).then(div => mainComments.appendChild(div));
 }

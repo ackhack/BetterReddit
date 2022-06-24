@@ -103,7 +103,7 @@ function getPostDiv(post) {
     return div;
 }
 
-function getContentDiv(post, forMain = false) {
+function getContentDiv(post) {
 
     if (post["crosspost_parent"] !== undefined) {
         post = post.crosspost_parent_list[post.crosspost_parent_list.length - 1];
@@ -113,10 +113,10 @@ function getContentDiv(post, forMain = false) {
 
     let content = document.createElement("div");
     content.className = "post_content post_element hoverable";
-    if (!forMain) content.onclick = (ev) => {
-        if (!(ev.target.classList.contains("no_click_passthrough")))
+    content.onclick = (ev) => {
+        if (!(ev.target.classList.contains("no_click_passthrough")) && content.parentElement.classList.contains("post_body"))
             postToMain(content.parentElement.parentElement)
-    };
+    }
 
     if (text) {
         let text = document.createElement("p");

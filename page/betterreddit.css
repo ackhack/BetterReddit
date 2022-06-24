@@ -6,12 +6,19 @@ p {
     margin: 0;
 }
 
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background-color: #333333;
     color: white;
     margin: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    width: 100%;
 }
 
 #mainList {
@@ -34,6 +41,8 @@ body {
 
 #content {
     margin-top: 2%;
+    width: inherit;
+    height: inherit;
 }
 
 .hoverable {
@@ -79,8 +88,6 @@ body {
 }
 
 .post_body {
-    max-height: inherit;
-    max-width: inherit;
     display: flex;
     flex-direction: row;
     max-height: 60vh;
@@ -95,10 +102,12 @@ body {
 }
 
 .post_content {
+    width: calc( 100% - 10px);
     max-height: inherit;
     max-width: inherit;
     flex: 2;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .post_upvotes {
@@ -118,6 +127,10 @@ body {
     left: 50%;
     position: relative;
     transform: translate(-50%);
+}
+
+.post_player {
+    width: fit-content;
 }
 
 .player_video {
@@ -261,6 +274,8 @@ body {
 #mainContent {
     max-width: -webkit-fill-available;
     max-height: inherit;
+    width: inherit;
+    height: inherit;
 }
 
 #mainComments {
