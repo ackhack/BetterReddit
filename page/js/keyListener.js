@@ -1,111 +1,146 @@
+const keys = {
+    "Escape": {
+        "last": 0,
+        "func": closeMain
+    },
+    "Enter": {
+        "last": 0,
+        "func": enter
+    },
+    "ArrowUp": {
+        "last": 0,
+        "func": arrowUp
+    },
+    "ArrowDown": {
+        "last": 0,
+        "func": arrowDown
+    },
+    "ArrowLeft": {
+        "last": 0,
+        "func": arrowLeft
+    },
+    "ArrowRight": {
+        "last": 0,
+        "func": arrowRight
+    },
+    " ": {
+        "last": 0,
+        "func": space
+    },
+    "m": {
+        "last": 0,
+        "func": m
+    }
+}
+
+
 document.onkeydown = function (evt) {
     evt = evt || window.event;
-    switch (evt.key) {
-        case "Escape":
-            closeMain();
-            break;
-        case "Enter":
-            enter(evt);
-            break;
-        case "ArrowUp":
-            arrowUp(evt);
-            break;
-        case "ArrowDown":
-            arrowDown(evt);
-            break;
-        case "ArrowLeft":
-            arrowLeft(evt);
-            break;
-        case "ArrowRight":
-            arrowRight(evt);
-            break;
-        case " ":
-            space(evt);
-            break;
-        case "m":
-            m(evt);
-            break;
+    if (keys[evt.key]) {
+        let now = Date.now()
+        if (keys[evt.key].last + 500 < now) {
+            keys[evt.key].func(evt);
+            keys[evt.key].last = now;
+        }
     }
-
 };
 
 function arrowUp(evt) {
-    if (document.getElementById("mainPage").style.display == "none") {
-        if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-            closeMain();
-        }
-        return;
-    };
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainArticle":
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                closeMain();
+            }
+            break;
+        case "mainPage":
+            evt.preventDefault();
 
-    if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
-            upvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_up")[0]);
-        return;
-    }
-    if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        postToMain(document.getElementById("mainList").children[activePost.divIndex]);
+            if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
+                    upvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_up")[0]);
+                return;
+            }
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                postToMain(document.getElementById("mainList").children[activePost.divIndex]);
+            }
+            break;
     }
 }
 
 function arrowDown(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
-            downvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_down")[0]);
-        return;
+            if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
+                    downvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_down")[0]);
+                return;
+            }
+            break;
     }
 }
 
 function arrowLeft(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        setActivePostByIndex(activePost.divIndex - 1);
-        return;
-    }
-    if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        shiftSlides(-1, document.getElementById("mainList").children[activePost.divIndex].title);
+            if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                setActivePostByIndex(activePost.divIndex - 1);
+                return;
+            }
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                shiftSlides(-1, document.getElementById("mainList").children[activePost.divIndex].title);
+            }
+            break;
     }
 }
 
 function arrowRight(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        setActivePostByIndex(activePost.divIndex + 1);
-        return;
-    }
-    if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
-        shiftSlides(1, document.getElementById("mainList").children[activePost.divIndex].title);
+            if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                setActivePostByIndex(activePost.divIndex + 1);
+                return;
+            }
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                shiftSlides(1, document.getElementById("mainList").children[activePost.divIndex].title);
+            }
+            break;
     }
 }
 
 function space(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.togglePause();
-
+            document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.togglePause();
+            break;
+    }
 }
 
 function m(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.toggleMute();
-
+            document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.toggleMute();
+            break;
+    }
 }
 
 function enter(evt) {
-    if (document.getElementById("mainPage").style.display == "none") return;
-    evt.preventDefault();
+    switch (currDisplay) {
+        case "mainPage":
+            evt.preventDefault();
 
-    if (activePost.divIndex !== undefined) {
-        postToMain(document.getElementById("mainList").children[activePost.divIndex]);
+            if (activePost.divIndex !== undefined) {
+                postToMain(document.getElementById("mainList").children[activePost.divIndex]);
+            }
+            break;
     }
 }
