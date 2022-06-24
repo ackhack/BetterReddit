@@ -13,7 +13,7 @@ function log(content, devLevel = false) {
 function scrollIntoView(div) {
     if (div == undefined || div == null) return;
 
-    if (settings.scrollMiddle) {
+    if (getSetting("scrollMiddle")) {
         updateThisInstance = false;
         div.scrollIntoView({ block: "center" });
     } else {

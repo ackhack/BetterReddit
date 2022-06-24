@@ -113,7 +113,7 @@ function getContentDiv(post) {
     }
     let ContentUrl = post.url;
     let text = post.selftext_html;
-    let blur = (settings.blurNSFW && post.over_18) || (settings.blurSpoiler && post.spoiler);
+    let blur = (getSetting("blurNSFW") && post.over_18) || (getSetting("blurSpoiler") && post.spoiler);
 
     let content = document.createElement("div");
     content.className = "post_content post_element hoverable" + (blur ? " blurred" : "");
