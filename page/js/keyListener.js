@@ -45,6 +45,13 @@ document.onkeydown = function (evt) {
     }
 };
 
+document.onkeyup = function (evt) {
+    evt = evt || window.event;
+    if (keys[evt.key]) {
+        keys[evt.key].last = 0;
+    }
+};
+
 function escape(evt) {
     switch (currDisplay) {
         case "mainArticle":
