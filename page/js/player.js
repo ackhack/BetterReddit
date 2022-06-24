@@ -16,6 +16,7 @@ function createVideoPlayerDiv(videoUrl, audioUrl) {
     video.onloadeddata = () => {
         player.duration = video.duration;
     }
+    video.onclick = () => { player.togglePause(); }
 
     let audio = document.createElement("audio");
     player.appendChild(audio);
@@ -85,6 +86,14 @@ function createVideoPlayerDiv(videoUrl, audioUrl) {
     player.togglePause = () => {
         log("Toggle pause");
         player.getElementsByClassName("player_playpause")[0].toggle();
+    }
+
+    player.onmouseenter = () => {
+        player.getElementsByClassName("player_controls")[0].style.display = "flex";
+    }
+
+    player.onmouseleave = () => {
+        player.getElementsByClassName("player_controls")[0].style.display = "none";
     }
 
     player.classList.add("playing");
@@ -158,7 +167,7 @@ function createVideoPlayerDiv(videoUrl, audioUrl) {
         timeSlider.type = "range";
         timeSlider.min = "0";
         timeSlider.max = "1";
-        timeSlider.step = "0.01";
+        timeSlider.step = "0.001";
         timeSlider.value = "0";
         timeSlider.onchange = (ev) => {
             player.ontimechange(ev.target.value);
