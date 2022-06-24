@@ -12,8 +12,14 @@ function log(content, devLevel = false) {
 
 function scrollIntoView(div) {
     if (div == undefined || div == null) return;
-    updateThisInstance = false;
-    div.scrollIntoView();
-    updateThisInstance = false;
-    window.scrollBy(0, -23);
+
+    if (settings.scrollMiddle) {
+        updateThisInstance = false;
+        div.scrollIntoView({ block: "center" });
+    } else {
+        updateThisInstance = false;
+        div.scrollIntoView();
+        updateThisInstance = false;
+        window.scrollBy(0, -23);
+    }
 }

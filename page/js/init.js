@@ -7,6 +7,8 @@ async function init() {
             return;
         }
         log('Secrets loaded', true);
+        loadSettings();
+        log('Settings loaded', true);
         initHeader();
         loadFirstPosts();
         document.getElementById("mainBack").onclick = () => closeMain();

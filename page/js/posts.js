@@ -38,7 +38,10 @@ function postsToList(posts) {
     let list = document.getElementById("mainList");
     for (post of posts) {
         try {
-            list.appendChild(getPostDiv(post));
+            let div = getPostDiv(post);
+            if (div === false) continue;
+
+            list.appendChild(div);
             postArray.push(post);
             newest_fullname = post.name;
             log('Added ' + post.title, true);
@@ -53,7 +56,7 @@ function postsToList(posts) {
 
 function getPostDiv(post) {
 
-    if (postArray.filter(x => x.name == post.name).length > 0) throw new Error("Post already exists: " + post.name);
+    if (postArray.filter(x => x.name == post.name).length > 0) return false;
 
     let div = document.createElement("div");
     div.className = "post post_element";
@@ -110,9 +113,10 @@ function getContentDiv(post) {
     }
     let ContentUrl = post.url;
     let text = post.selftext_html;
+    let blur = (settings.blurNSFW && post.over_18) || (settings.blurSpoiler && post.spoiler);
 
     let content = document.createElement("div");
-    content.className = "post_content post_element hoverable";
+    content.className = "post_content post_element hoverable" + (blur ? " blurred" : "");
     content.onclick = (ev) => {
         if (!(ev.target.classList.contains("no_click_passthrough")) && content.parentElement.classList.contains("post_body"))
             postToMain(content.parentElement.parentElement)
