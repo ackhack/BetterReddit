@@ -80,6 +80,14 @@ function getPostDiv(post) {
     title.innerText = post.title;
     title.title = "http://reddit.com" + post.permalink;
     title.onclick = (ev) => open(ev.target.title);
+
+    if (post.spoiler) {
+        title.style["border-bottom"] = "1px solid lightblue";
+    }
+    if (post.over_18) {
+        title.style["border-bottom"] = "1px solid orange";
+    }
+
     div.appendChild(title);
 
     let body = document.createElement("div");
