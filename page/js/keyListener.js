@@ -100,6 +100,11 @@ function arrowDown(evt) {
 
 function arrowLeft(evt) {
     switch (currDisplay) {
+        case "mainArticle":
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                shiftSlides(-1, document.getElementById("mainContent").getElementsByClassName("post_gallery")[0].title);
+            }
+            break;
         case "mainPage":
             evt.preventDefault();
 
@@ -116,6 +121,11 @@ function arrowLeft(evt) {
 
 function arrowRight(evt) {
     switch (currDisplay) {
+        case "mainArticle":
+            if (evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
+                shiftSlides(1, document.getElementById("mainContent").getElementsByClassName("post_gallery")[0].title);
+            }
+            break;
         case "mainPage":
             evt.preventDefault();
 
