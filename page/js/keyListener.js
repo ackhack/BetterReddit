@@ -1,35 +1,67 @@
 const keys = {
     "Escape": {
         "last": 0,
-        "func": escape
+        "func": escape,
+        "preventDefault": {
+            "mainArticle": true,
+            "mainPage": false
+        }
     },
     "Enter": {
         "last": 0,
-        "func": enter
+        "func": enter,
+        "preventDefault": {
+            "mainArticle": true,
+            "mainPage": true
+        }
     },
     "ArrowUp": {
         "last": 0,
-        "func": arrowUp
+        "func": arrowUp,
+        "preventDefault": {
+            "mainArticle": false,
+            "mainPage": true
+        }
     },
     "ArrowDown": {
         "last": 0,
-        "func": arrowDown
+        "func": arrowDown,
+        "preventDefault": {
+            "mainArticle": false,
+            "mainPage": true
+        }
     },
     "ArrowLeft": {
         "last": 0,
-        "func": arrowLeft
+        "func": arrowLeft,
+        "preventDefault": {
+            "mainArticle": false,
+            "mainPage": true
+        }
     },
     "ArrowRight": {
         "last": 0,
-        "func": arrowRight
+        "func": arrowRight,
+        "preventDefault": {
+            "mainArticle": false,
+            "mainPage": true
+        }
     },
     " ": {
         "last": 0,
-        "func": space
+        "func": space,
+        "preventDefault": {
+            "mainArticle": true,
+            "mainPage": true
+        }
     },
     "m": {
         "last": 0,
-        "func": m
+        "func": m,
+        "preventDefault": {
+            "mainArticle": true,
+            "mainPage": true
+        }
     }
 }
 
@@ -38,6 +70,7 @@ document.onkeydown = function (evt) {
     evt = evt || window.event;
     if (keys[evt.key]) {
         let now = Date.now()
+        if (keys[evt.key].preventDefault[currDisplay]) evt.preventDefault();
         if (keys[evt.key].last + 500 < now) {
             keys[evt.key].func(evt);
             keys[evt.key].last = now;
@@ -55,8 +88,6 @@ document.onkeyup = function (evt) {
 function escape(evt) {
     switch (currDisplay) {
         case "mainArticle":
-            evt.preventDefault();
-
             closeMain();
             break;
     }
@@ -70,8 +101,6 @@ function arrowUp(evt) {
             }
             break;
         case "mainPage":
-            evt.preventDefault();
-
             if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                 if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
                     upvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_up")[0]);
@@ -87,8 +116,6 @@ function arrowUp(evt) {
 function arrowDown(evt) {
     switch (currDisplay) {
         case "mainPage":
-            evt.preventDefault();
-
             if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                 if (activePost.divIndex !== undefined && activePost.postIndex !== undefined)
                     downvote(postArray[activePost.postIndex], document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_down")[0]);
@@ -106,8 +133,6 @@ function arrowLeft(evt) {
             }
             break;
         case "mainPage":
-            evt.preventDefault();
-
             if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                 setActivePostByIndex(activePost.divIndex - 1);
                 return;
@@ -127,8 +152,6 @@ function arrowRight(evt) {
             }
             break;
         case "mainPage":
-            evt.preventDefault();
-
             if (!evt.ctrlKey && !evt.altKey && !evt.shiftKey) {
                 setActivePostByIndex(activePost.divIndex + 1);
                 return;
@@ -143,8 +166,6 @@ function arrowRight(evt) {
 function space(evt) {
     switch (currDisplay) {
         case "mainPage":
-            evt.preventDefault();
-
             document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.togglePause();
             break;
     }
@@ -153,8 +174,6 @@ function space(evt) {
 function m(evt) {
     switch (currDisplay) {
         case "mainPage":
-            evt.preventDefault();
-
             document.getElementById("mainList").children[activePost.divIndex].getElementsByClassName("post_player")[0]?.toggleMute();
             break;
     }
@@ -163,8 +182,6 @@ function m(evt) {
 function enter(evt) {
     switch (currDisplay) {
         case "mainPage":
-            evt.preventDefault();
-
             if (activePost.divIndex !== undefined) {
                 postToMain(document.getElementById("mainList").children[activePost.divIndex]);
             }
