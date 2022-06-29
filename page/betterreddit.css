@@ -245,7 +245,7 @@ body {
 }
 
 #mainArticle {
-    display: flex;
+    display: none;
     flex-direction: column;
 }
 
@@ -418,4 +418,8 @@ input[type=range]::-webkit-slider-thumb {
 
 #mainList .blurred {
     filter: blur(17px);
+}
+
+#mainFullname{
+    display: none;
 }

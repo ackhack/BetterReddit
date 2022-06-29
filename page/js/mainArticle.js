@@ -7,6 +7,7 @@ function closeMain() {
     mainArticle.children[0].children[1].innerHTML = "";
     mainArticle.children[0].children[2].innerHTML = "";
     mainArticle.children[3].innerHTML = "";
+    mainArticle.children[4].innerHTML = "";
     mainPage.style.display = "block";
     currDisplay = "mainPage";
 
@@ -22,8 +23,64 @@ function closeMain() {
     comments = [];
 }
 
+function postToMain(div) {
+
+    if (!setActivePost(div)) {
+        log('Post not found', true);
+        return;
+    }
+
+    let content = div.getElementsByClassName("post_content")[0];
+
+    if (content == undefined || content == null) {
+        log('Error: Post not found', true);
+        sendNotification("Error: Post not found");
+        return;
+    }
+
+    let post = postArray[activePost.postIndex];
+
+    let mainArticle = document.getElementById("mainArticle");
+    let mainContent = document.getElementById("mainContent");
+    let mainComments = document.getElementById("mainComments");
+    let mainPage = document.getElementById("mainPage");
+
+    mainContent.innerHTML = "";
+
+    let title = document.createElement("span");
+    title.className = "main_title hoverable";
+    title.innerText = post.title;
+    title.title = "http://reddit.com" + post.permalink;
+    title.onclick = (ev) => open(ev.target.title);
+
+    let subreddit = document.createElement("div");
+    subreddit.className = "main_subreddit hoverable";
+    subreddit.innerText = post.subreddit_name_prefixed;
+    subreddit.onclick = (ev) => open("https://www.reddit.com/" + ev.target.innerText);
+
+    let author = document.createElement("div");
+    author.className = "main_author hoverable";
+    author.innerText = post.author.name;
+    author.onclick = (ev) => open("https://www.reddit.com/user/" + ev.target.innerText);
+
+    mainArticle.children[1].appendChild(title);
+    mainArticle.children[0].children[1].appendChild(subreddit);
+    mainArticle.children[0].children[2].appendChild(author);
+    mainArticle.children[4].innerText = post.name;
+    mainPage.style.display = "none";
+    mainArticle.style.display = "block";
+    currDisplay = "mainArticle";
+
+    mainContent.appendChild(content);
+
+    updateThisInstance = false;
+    window.scroll(0, 0);
+    getCommentsDiv(post).then(div => mainComments.appendChild(div));
+}
+
 async function getCommentsDiv(post) {
     log('Get Comments', true);
+    let postName = post.name;
     if (post.comments.list == undefined) {
         let comments = await post.comments.fetch_all();
         if (comments == undefined) {
@@ -40,6 +97,7 @@ async function getCommentsDiv(post) {
     for (let comment of post.comments.list) {
         try {
             let div = getCommentDiv(comment);
+            if (postName !== document.getElementById("mainFullname").innerText) break;
             mainDiv.appendChild(div);
             getCommentTreesDivs(comment).forEach(d => div.append(d))
             log('Comment: ' + comment.body, true);
@@ -95,58 +153,4 @@ function getCommentDiv(comment) {
 
     div.appendChild(span);
     return div;
-}
-
-function postToMain(div) {
-
-    if (!setActivePost(div)) {
-        log('Post not found', true);
-        return;
-    }
-
-    let content = div.getElementsByClassName("post_content")[0];
-
-    if (content == undefined || content == null) {
-        log('Error: Post not found', true);
-        sendNotification("Error: Post not found");
-        return;
-    }
-
-    let post = postArray[activePost.postIndex];
-
-    let mainArticle = document.getElementById("mainArticle");
-    let mainContent = document.getElementById("mainContent");
-    let mainComments = document.getElementById("mainComments");
-    let mainPage = document.getElementById("mainPage");
-
-    mainContent.innerHTML = "";
-
-    let title = document.createElement("span");
-    title.className = "main_title hoverable";
-    title.innerText = post.title;
-    title.title = "http://reddit.com" + post.permalink;
-    title.onclick = (ev) => open(ev.target.title);
-
-    let subreddit = document.createElement("div");
-    subreddit.className = "main_subreddit hoverable";
-    subreddit.innerText = post.subreddit_name_prefixed;
-    subreddit.onclick = (ev) => open("https://www.reddit.com/" + ev.target.innerText);
-
-    let author = document.createElement("div");
-    author.className = "main_author hoverable";
-    author.innerText = post.author.name;
-    author.onclick = (ev) => open("https://www.reddit.com/user/" + ev.target.innerText);
-
-    mainArticle.children[1].appendChild(title);
-    mainArticle.children[0].children[1].appendChild(subreddit);
-    mainArticle.children[0].children[2].appendChild(author);
-    mainPage.style.display = "none";
-    mainArticle.style.display = "block";
-    currDisplay = "mainArticle";
-
-    mainContent.appendChild(content);
-
-    updateThisInstance = false;
-    window.scroll(0, 0);
-    getCommentsDiv(post).then(div => mainComments.appendChild(div));
 }
