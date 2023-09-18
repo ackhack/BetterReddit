@@ -75,39 +75,67 @@ function postToMain(div) {
 
     updateThisInstance = false;
     window.scroll(0, 0);
-    getCommentsDiv(post).then(div => mainComments.appendChild(div));
+    getCommentsDiv(post, div => mainComments.appendChild(div));
 }
 
-async function getCommentsDiv(post) {
+function getCommentsDiv(post, callb) {
     log('Get Comments', true);
     let postName = post.name;
-    if (post.comments.list == undefined) {
-        let comments = await post.comments.fetch_all();
-        if (comments == undefined) {
-            log('Error: Api not responding', true);
-            sendNotification("Error: Api not responding");
-            return;
-        }
-        post.comments.list = comments;
-    }
-
     let mainDiv = document.createElement("div");
     mainDiv.className = "main_comments";
 
-    for (let comment of post.comments.list) {
-        try {
-            let div = getCommentDiv(comment);
-            if (postName !== document.getElementById("mainFullname").innerText) break;
+    function addCommentListToDiv(list, mainDiv) {
+        console.log(list);
+        if (list.length == 0) {
+            let div = document.createElement("div");
+            let span = document.createElement("span");
+
+            span.innerText = "No Comments available";
+
+            div.appendChild(span);
             mainDiv.appendChild(div);
-            getCommentTreesDivs(comment).forEach(d => div.append(d))
-            log('Comment: ' + comment.body, true);
-        } catch (ex) {
-            log(ex);
-            sendNotification(ex);
+            return mainDiv;
         }
+
+        for (let comment of post.comments.list) {
+            try {
+                let div = getCommentDiv(comment);
+                if (postName !== document.getElementById("mainFullname").innerText) break;
+                mainDiv.appendChild(div);
+                getCommentTreesDivs(comment).forEach(d => div.append(d))
+                log('Comment: ' + comment.body, true);
+            } catch (ex) {
+                log(ex);
+                sendNotification(ex);
+            }
+        }
+
+        return mainDiv;
     }
 
-    return mainDiv;
+    if (post.comments.list == undefined) {
+        let div = document.createElement("div");
+        let span = document.createElement("span");
+
+        div.style = "border-top:1px solid white;";
+        span.innerText = "Waiting for Comments";
+
+        div.appendChild(span);
+        mainDiv.appendChild(div);
+
+        post.comments.fetch_all().then(res => {
+            if (res == undefined) {
+                log('Error: Api not responding', true);
+                sendNotification("Error: Api not responding");
+                return;
+            }
+            post.comments.list = res;
+            mainDiv.removeChild(div);
+            callb(addCommentListToDiv(post.comments.list, mainDiv));
+        });
+    } else {
+        callb(addCommentListToDiv(post.comments.list, mainDiv));
+    }
 }
 
 function getCommentTreesDivs(comment) {
