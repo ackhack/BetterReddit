@@ -2,21 +2,28 @@ let currentDefaultVolume = 0.5;
 
 function createVideoPlayerDiv(videoUrl, audioUrl) {
 
+    log("Creating Player with VUrl: " + videoUrl + " | AUrl: " + audioUrl);
     let player = document.createElement("div");
     player.className = "post_player post_element no_click_passthrough";
 
     let video = document.createElement("video");
-    video.className = "player_video no_click_passthrough";
-    video.preload = "auto";
-    video.loop = "loop";
-    video.volume = "0";
-    video.src = videoUrl;
     player.appendChild(video);
-    player.currentTime = 0;
-    video.onloadeddata = () => {
-        player.duration = video.duration;
+    if (videoUrl !== undefined) {
+        video.className = "player_video no_click_passthrough";
+        video.preload = "auto";
+        video.loop = "loop";
+        video.volume = "0";
+        video.src = videoUrl;
+        player.currentTime = 0;
+        video.onloadeddata = () => {
+            player.duration = video.duration;
+        }
+        video.onclick = () => { player.togglePause(); }
     }
-    video.onclick = () => { player.togglePause(); }
+    else {
+        log("VideoURL undefined");
+        video.remove();
+    }
 
     let audio = document.createElement("audio");
     player.appendChild(audio);
@@ -31,9 +38,13 @@ function createVideoPlayerDiv(videoUrl, audioUrl) {
                 audio.volume = "0";
                 audio.src = audioUrl;
             } else {
+                log("Audio AccessDenied");
                 audio.remove();
             }
         })
+    }
+    else {
+        log("No AudioURL");
     }
 
     let controls = createControlsDiv(player);

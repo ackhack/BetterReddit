@@ -141,12 +141,21 @@ function getContentDiv(post) {
     }
 
     if (ContentUrl.startsWith("https://v.redd.it/")) {
-        content.appendChild(createVideoPlayerDiv(post.media.reddit_video.fallback_url, post.media.reddit_video.fallback_url.replace(/DASH_\d+\.mp4.*/, "DASH_audio.mp4")));
+        getUrlsFromRedditVideo(post.media.reddit_video).then(urls => {
+            if (urls.length == 0) {
+                let text = document.createElement("p");
+                text.className = "post_text post_element";
+                text.innerHTML = "Video failed to load due to API Error";
+                content.appendChild(text);
+            }
+            content.appendChild(createVideoPlayerDiv(urls[0], urls[1]));
+        });
         return content;
     }
 
     if (ContentUrl.startsWith("https://www.redgifs.com/watch/") ||
         ContentUrl.startsWith("https://twitter.com/") ||
+        ContentUrl.startsWith("https://x.com/") ||
         ContentUrl.startsWith("https://gfycat.com/")) {
         content.innerHTML += post.secure_media_embed.content;
         Array.from(content.getElementsByTagName("iframe")).forEach(iframe => { iframe.className += " post_element post_iframe"; if (iframe.style.position == "absolute") { iframe.style.position = "relative" } });
@@ -246,4 +255,42 @@ function setActivePostByIndex(divIndex, scroll = true) {
     newDiv.getElementsByClassName("post_player")[0]?.play();
     if (scroll)
         scrollIntoView(newDiv);
+}
+
+//returns array [videoUrl,audioUrl]
+async function getUrlsFromRedditVideo(redditVideo) {
+    if (redditVideo['dash_url']) {
+        log("Fetching " + redditVideo['dash_url']);
+        let prefix = redditVideo['dash_url'].substring(0, redditVideo['dash_url'].lastIndexOf("/") + 1);
+        let xml = await fetch(redditVideo['dash_url']).then(b => b.text()).then(x => { return x; });
+        log(xml, true);
+        let videoSuffix = undefined;
+        let audioSuffix = undefined;
+
+        let videoRegex = /<AdaptationSet\W+contentType="video"[\n\W+\w+]*<BaseURL>(.*)<\/BaseURL>/gm;
+        let audioRegex = /<AdaptationSet\W+contentType="audio"[\n\W+\w+]*<BaseURL>(.*)<\/BaseURL>/gm;
+
+        for (let part of xml.split("</AdaptationSet>")) {
+            if (!part.includes("AdaptationSet")) continue;
+            log(part, true);
+            let videoMatch = videoRegex.exec(part);
+            let audioMatch = audioRegex.exec(part);
+            log(videoMatch, true);
+            log(audioMatch, true);
+            if (videoMatch) {
+                videoSuffix = videoMatch[1];
+            }
+            if (audioMatch) {
+                audioSuffix = audioMatch[1];
+            }
+        }
+        if (videoSuffix === undefined && audioSuffix === undefined) return [];
+        return [videoSuffix ? prefix + videoSuffix : undefined , audioSuffix ? prefix + audioSuffix : undefined];
+    }
+
+    if (redditVideo['fallback_url']) {
+        return [redditVideo.fallback_url, redditVideo.fallback_url.replace(/DASH_\d+\.mp4.*/, "DASH_audio.mp4")];
+    }
+
+    return [];
 }
