@@ -60,13 +60,18 @@ body {
 }
 
 .post {
-    border-radius: 5px;
-    padding: 10px;
+    max-width: 95%;
+    min-width: 40%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    margin-top: 10px;
     border: 1px solid white;
+    border-radius: 15px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
-    max-width: 45vw;
 }
 
 .post_header {
