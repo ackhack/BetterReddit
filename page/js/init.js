@@ -8,6 +8,7 @@ async function init() {
         }
         log('Secrets loaded', true);
         loadSettings();
+        loadVotes();
         log('Settings loaded', true);
         initHeader();
         loadFirstPosts();

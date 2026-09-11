@@ -1,9 +1,28 @@
 let voteList = {};
+let voteKey = 'savedVotes';
+
+function loadVotes() {
+    try {
+        let data = localStorage.getItem(voteKey);
+        if (data != null) {
+            Object.assign(voteList, JSON.parse(data));
+        }
+    } catch (e) {
+        // ignored
+    }
+}
+
+function saveVotes() {
+    try {
+        localStorage.setItem(voteKey, JSON.stringify(voteList));
+    } catch (e) {
+        // Storage full or unavailable
+    }
+}
 
 function getVotingDiv(object, sideways, prefix) {
     let votes = document.createElement("div");
     votes.className = prefix + "_object_votes" + (sideways ? " votes_sideways" : "");
-    voteList[object.name] = 0;
 
     let up = document.createElement("p");
     up.className = prefix + "_up hoverable arrow_up_p";
@@ -27,6 +46,21 @@ function getVotingDiv(object, sideways, prefix) {
     idown.className = "arrow arrow_down";
     down.appendChild(idown);
     votes.appendChild(down);
+
+    // Restore previous vote state
+    if (voteList[object.name]) {
+        if (voteList[object.name] == 1) {
+            upvotes.style.color = "orange";
+            iup.style.border = "solid orange";
+            iup.style["border-width"] = "0 5 5 0";
+            voteList[object.name] = 1;
+        } else if (voteList[object.name] == -1) {
+            upvotes.style.color = "lightblue";
+            idown.style.border = "solid lightblue";
+            idown.style["border-width"] = "0 5 5 0";
+            voteList[object.name] = -1;
+        }
+    }
     return votes;
 }
 
@@ -36,7 +70,8 @@ function upvote(object, target) {
         target.children[0].style.border = "solid white";
         target.children[0].style["border-width"] = "0 5 5 0";
         target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) - 1;
-        voteList[object.name] = 0;
+        delete voteList[object.name];
+        saveVotes();
         target.parentElement.children[1].style.color = "white";
         return;
     };
@@ -45,8 +80,9 @@ function upvote(object, target) {
     target.children[0].style["border-width"] = "0 5 5 0";
     target.parentElement.children[2].children[0].style.border = "solid white";
     target.parentElement.children[2].children[0].style["border-width"] = "0 5 5 0";
-    target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) + 1 - voteList[object.name];
+    target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) + 1;
     voteList[object.name] = 1;
+    saveVotes();
     target.parentElement.children[1].style.color = "orange";
 }
 
@@ -57,7 +93,8 @@ function downvote(object, target) {
         target.children[0].style.border = "solid white";
         target.children[0].style["border-width"] = "0 5 5 0";
         target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) + 1;
-        voteList[object.name] = 0;
+        delete voteList[object.name];
+        saveVotes();
         target.parentElement.children[1].style.color = "white";
         return;
     };
@@ -66,7 +103,8 @@ function downvote(object, target) {
     target.children[0].style["border-width"] = "0 5 5 0";
     target.parentElement.children[0].children[0].style.border = "solid white";
     target.parentElement.children[0].children[0].style["border-width"] = "0 5 5 0";
-    target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) - 1 - voteList[object.name];
+    target.parentElement.children[1].innerText = parseInt(target.parentElement.children[1].innerText) - 1;
     voteList[object.name] = -1;
+    saveVotes();
     target.parentElement.children[1].style.color = "lightblue";
 }
