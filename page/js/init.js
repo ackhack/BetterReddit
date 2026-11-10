@@ -9,6 +9,7 @@ async function init() {
         log('Secrets loaded', true);
         loadSettings();
         loadVotes();
+        syncVotesFromReddit();
         log('Settings loaded', true);
         initHeader();
         loadFirstPosts();

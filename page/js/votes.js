@@ -1,5 +1,6 @@
 let voteList = {};
 let voteKey = 'savedVotes';
+let voteHistoryLimit = 100;
 
 function loadVotes() {
     try {
@@ -48,20 +49,63 @@ function getVotingDiv(object, sideways, prefix) {
     votes.appendChild(down);
 
     // Restore previous vote state
-    if (voteList[object.name]) {
-        if (voteList[object.name] == 1) {
-            upvotes.style.color = "orange";
-            iup.style.border = "solid orange";
-            iup.style["border-width"] = "0 5 5 0";
-            voteList[object.name] = 1;
-        } else if (voteList[object.name] == -1) {
-            upvotes.style.color = "lightblue";
-            idown.style.border = "solid lightblue";
-            idown.style["border-width"] = "0 5 5 0";
-            voteList[object.name] = -1;
-        }
-    }
+    applyVoteStyle(votes, voteList[object.name]);
     return votes;
+}
+
+function applyVoteStyle(voteDiv, state) {
+    if (voteDiv == null || state === undefined) return;
+    let upvotes = voteDiv.children[1];
+    let upArrow = voteDiv.children[0].children[0];
+    let downArrow = voteDiv.children[2].children[0];
+    if (state == 1) {
+        upvotes.style.color = "orange";
+        upArrow.style.border = "solid orange";
+        upArrow.style["border-width"] = "0 5 5 0";
+        downArrow.style.border = "solid white";
+        downArrow.style["border-width"] = "0 5 5 0";
+    } else if (state == -1) {
+        upvotes.style.color = "lightblue";
+        downArrow.style.border = "solid lightblue";
+        downArrow.style["border-width"] = "0 5 5 0";
+        upArrow.style.border = "solid white";
+        upArrow.style["border-width"] = "0 5 5 0";
+    }
+}
+
+function refreshRenderedVotes() {
+    for (let postDiv of document.querySelectorAll("#mainList .post")) {
+        applyVoteStyle(postDiv.querySelector(".post_object_votes"), voteList[postDiv.title]);
+    }
+}
+
+async function syncVotesFromReddit() {
+    try {
+        let user = api.getUser(username);
+        let upvoted = await user.getUpvotedContent({ limit: voteHistoryLimit });
+        let downvoted = await user.getDownvotedContent({ limit: voteHistoryLimit });
+        let changed = false;
+        for (let post of upvoted) {
+            if (voteList[post.name] === undefined) {
+                voteList[post.name] = 1;
+                changed = true;
+            }
+        }
+        for (let post of downvoted) {
+            if (voteList[post.name] === undefined) {
+                voteList[post.name] = -1;
+                changed = true;
+            }
+        }
+        if (changed) {
+            saveVotes();
+        }
+        refreshRenderedVotes();
+        log('Vote history synced from reddit', true);
+    } catch (e) {
+        log(e);
+        sendNotification(e);
+    }
 }
 
 function upvote(object, target) {

@@ -9,6 +9,7 @@
 - **Post detail view**: Expand any post into a fullscreen-like article view with nested comments
 - **Gallery slideshow**: Navigate multi-image gallery posts with left/right arrows
 - **Upvote/downvote**: Inline voting with visual feedback (orange for upvote, lightblue for downvote)
+- **Vote history sync**: On page load, fetches the user's recent upvoted/downvoted posts from Reddit and merges them into the local vote cache (local entries take precedence), so votes made in other clients are displayed correctly
 - **Media support**: Videos, images, galleries, audio, and embedded iframes
 - **Comment threading**: Nested comment trees rendered with indentation
 - **Notification toasts**: Non-intrusive notification popups for status updates
